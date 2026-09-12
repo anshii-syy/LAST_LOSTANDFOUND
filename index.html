@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LOGIN FORM</title>
+  <link rel="stylesheet" href="LOGINF.css">
+</head>
+<body>
+
+  <div class="page">
+    
+    <!-- Left -->
+    <div class="left">
+      <div class="h1">
+        <h1>AICS LOST & FOUND PORTAL</h1>
+      </div>
+      <h2>Join the AICS Community!</h2>
+      <p>A web portal that helps students report missing items and claim found ones. Use our official portal to keep your property safe.</p>
+    </div>
+
+    <!-- Right -->
+    <div class="right">
+      <form class="box" onsubmit="event.preventDefault(); handleLogin();">
+        <h2>Welcome!</h2>
+        <p class="text">Please login to your account.</p>
+
+        <div class="username">
+          <input type="text" id="loginUsername" placeholder="Username" required>
+        </div>
+
+        <div class="username">
+          <input type="password" id="loginPassword" placeholder="Password" required>
+        </div>
+
+        <button type="submit">Login</button>
+
+        <p class="signup">
+          Don't have an account? <a href="Signup.html">Sign Up</a>
+        </p>
+            </form>
+            </div>
+
+  </div>
+
+
+
+    <!-- BASTA DATABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+    const SUPABASE_URL = 'https://xcuyfajikizhaxhvgwdp.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjdXlmYWppa2l6aGF4aHZnd2RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3MzU5NDMsImV4cCI6MjEwMzMxMTk0M30.TkbHcHlOfREeRWkedrcfiKznpd3t8urT05hU6tZ5Bm8';
+    
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function handleLogin() {
+    const usernameInput = document.getElementById('loginUsername').value.trim();
+    const passwordInput = document.getElementById('loginPassword').value.trim();
+
+    if (!usernameInput || !passwordInput) {
+        alert("Please fill out all fields!");
+        return;
+    }
+
+    const Email = usernameInput.toLowerCase().replace(/[^a-z0-9]/g, '') + "@aicslocal.com";
+
+    try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email: Email,
+            password: passwordInput
+        });
+
+        if (error) {
+            console.error("Supabase Error:", error);
+            alert("Incorrect Username or Password!");
+            return;
+        }
+
+        // fetch this user's role from profiles
+        const { data: profile, error: profileError } = await supabaseClient
+            .from('profiles')
+            .select('role')
+            .eq('id', data.user.id)
+            .single();
+
+        if (profileError) {
+            console.error("Profile fetch error:", profileError);
+            alert("Logged in, but couldn't load account info.");
+            return;
+        }
+
+        alert("Login Successful!");
+
+        if (profile.role === 'admin') {
+            window.location.href = "Admin.html";
+        } else {
+            window.location.href = "Website.html";
+        }
+
+    } catch (err) {
+        console.error("Unexpected Error:", err);
+        alert("An error occurred...");
+    }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f7fa;
+}
+
+.header {
+    height: 70px;
+    background-color: #1F3A5F;
+    color: white;
+    display: flex;
+    align-items: center; 
+    padding: 0 30px;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+/* para sa main layout nya */
+#labyu {
+    width: 100%;
+}
+
+
+#grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: calc(100vh - 70px);
+}
+
+/* sa left sidebar */
+.profile{
+    text-align: center;
+    background-color: #E8EEF5;
+    padding: 25px 20px;
+}
+
+/* "student" */
+.box-title {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #1F3A5F;
+}
+
+/* sidebar buttons */
+.profile a {
+    display: block;
+    margin-bottom: 12px;
+}
+
+.profile button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: white;
+    color: #1F3A5F;
+    font-size: 15px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.profile button:hover {
+    background-color: #D5E0EC;
+}
+
+/* labas ng table */
+.table-a {
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+
+.table-title {
+    margin-top: 10;
+    margin-bottom: 12px;
+    font-size: 15px;
+    color: #040000;
+    font-weight: bold;
+}
+
+/* basta yung 4 yan "I, D, T, S" */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.table th,
+.table td {
+  padding: 14px 16px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background: #2b7a9e; 
+  color: white;
+}
+
+.table td {
+  background: #fff;
+}

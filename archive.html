@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archived-Claims</title>
+    <style>
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f5f7fa;
+    }
+
+    #grid {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        min-height: 100vh;
+    }
+
+    .profile {
+        background-color: #1F3A5F;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+    }
+
+    .profile h2 {
+        padding: 20px;
+        margin: 0;
+        font-size: 20px;
+        font-weight: bold;
+        background-color: #16293f;
+    }
+
+    .nav {
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
+    }
+
+    .nav a {
+        color: #cfd9e6;
+        text-decoration: none;
+    }
+
+    .nav button {
+        width: 100%;
+        text-align: left;
+        padding: 14px 20px;
+        border: none;
+        background: transparent;
+        color: #cfd9e6;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+    .nav button:hover {
+        background-color: #2a4a75;
+        color: white;
+    }
+
+    .nav button.active {
+        background-color: #ffffff;
+        color: #1F3A5F;
+        font-weight: bold;
+    }
+
+    .table-a {
+        padding: 20px;
+        background-color: #ffffff;
+    }
+
+    .table-title {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 18px;
+    color: #040000;
+    font-weight: bold;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    .table th,
+    .table td {
+      padding: 14px 16px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .table th {
+      background: #004c70; 
+      color: white;
+    }
+
+    .table td {
+      background: #fff;
+    }
+
+    .view {
+        background-color: #0151ff;
+        color: white;
+        border: none;
+        padding: 6px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+    }
+    .view:hover {
+        background-color: #16293f;
+    }
+
+    .result-approved {
+        background: #e3f1e3;
+        color: #2e7d32;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .result-rejected {
+        background: #fde0e0;
+        color: #c62828;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .info-overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.4);
+        align-items: center;
+        justify-content: center;
+    
+    }
+
+    .info {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        width: 400px;
+        max-width: 90%;
+    }
+
+    .info h3 {
+        margin-top: 0;
+        color: #1F3A5F;
+    }
+
+    .info-actions {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .close {
+        background-color: #eee;
+        color: #333;
+        border: none;
+        padding: 6px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    </style>
+</head>
+
+<body>
+    <div id="grid">
+        <div class="profile">
+            <h2>AICS Admin</h2>
+
+            <div class="nav">
+               <a href="admin.html"><button>Dashboard</button></a>
+               <a href="admin_claim.html"><button>Claim Requests</button></a>
+               <a href="admin_report.html"><button>Lost Report</button></a>
+               <a href="users.html"><button>Verified Users</button></a>
+               <a href="archive.html"><button class="active">Archive</button></a>
+            </div>
+        </div>
+
+        <!-- main content -->
+        <div class="table-a">
+            <h4 class="table-title">Archived Claims</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Section</th>
+                        <th>Item</th>
+                        <th>Result</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- filled in by loadArchive() -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- view-only modal -->
+    <div id="claim" class="info-overlay">
+        <div class="info">
+            <h3 id="ItemName">Item Name</h3>
+            <p><strong>Claimed by:</strong> <span id="Name"></span></p>
+            <p><strong>Section:</strong> <span id="Section"></span></p>
+            <p><strong>Description:</strong></p>
+            <p id="Description"></p>
+            <p><strong>Result:</strong> <span id="Result"></span></p>
+
+            <div class="info-actions">
+                <button class="close" onclick="closebutton()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const { createClient } = supabase;
+        const supabaseClient = createClient(
+            'https://xcuyfajikizhaxhvgwdp.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjdXlmYWppa2l6aGF4aHZnd2RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3MzU5NDMsImV4cCI6MjEwMzMxMTk0M30.TkbHcHlOfREeRWkedrcfiKznpd3t8urT05hU6tZ5Bm8'
+        );
+
+        async function loadArchive() {
+            const { data: archived, error } = await supabaseClient
+                .from('CLAIM_ARCHIVE')
+                .select('*')
+                .order('archived_at', { ascending: false });
+
+            if (error) {
+                console.error('Error loading archive:', error);
+                return;
+            }
+
+            const tbody = document.querySelector('.table tbody');
+            tbody.innerHTML = '';
+
+            archived.forEach(claim => {
+                const row = document.createElement('tr');
+                const resultClass = claim.result === 'approved' ? 'result-approved' : 'result-rejected';
+                row.innerHTML = `
+                    <td>${claim.student_name}</td>
+                    <td>${claim.student_section}</td>
+                    <td>${claim.item_name}</td>
+                    <td><span class="${resultClass}">${claim.result}</span></td>
+                    <td><button class="view" onclick='showClaimDetails(${JSON.stringify(claim)})'>View</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function showClaimDetails(claim) {
+            document.getElementById('ItemName').textContent = claim.item_name;
+            document.getElementById('Name').textContent = claim.student_name;
+            document.getElementById('Section').textContent = claim.student_section;
+            document.getElementById('Description').textContent = claim.proof_description;
+            document.getElementById('Result').textContent = claim.result;
+            document.getElementById('claim').style.display = 'flex';
+        }
+
+        function closebutton() {
+            document.getElementById('claim').style.display = 'none';
+        }
+
+        loadArchive();
+    </script>
+
+</body>
+</html>

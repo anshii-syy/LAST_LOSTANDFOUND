@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>verified-users</title>
+</head>
+<style>
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f7fa;
+}
+
+#grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 100vh;
+}
+
+/* sidebar */
+.profile {
+    background-color: #1F3A5F;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.profile h2 {
+    padding: 20px;
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #16293f; 
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.nav a {
+    color: #cfd9e6;
+    text-decoration: none;
+}
+
+.nav button {
+    width: 100%;
+    text-align: left;
+    padding: 14px 20px;
+    border: none;
+    background: transparent;
+    color: #cfd9e6;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.nav button:hover {
+    background-color: #2a4a75;
+    color: white;
+}
+
+.nav button.active {
+    background-color: #ffffff;
+    color: #1F3A5F;
+    font-weight: bold;
+}
+
+/* labas ng table */
+.table-a {
+    padding: 20px;
+    background-color: #ffffff;
+    
+}
+
+
+.table-title {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 18px;
+    color: #040000;
+    font-weight: bold;
+}
+
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.table th,
+.table td {
+  padding: 14px 16px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background: #2b7a9e; 
+  color: white;
+}
+
+.table td {
+  background: #fff;
+}
+
+</style>
+<body>
+    <div id="grid">
+        <div class="profile">
+            <h2>AICS Admin</h2>
+
+            <div class="nav">
+               <a href="admin.html"><button>Dashboard</button></a>
+                <a href="admin_claim.html"><button>Claim Requests</button></a>
+                <a href="admin_report.html"><button>Lost Reports</button></a>
+                <a href="users.html"><button class="active">Verified Users</button></a>
+                <a href="archive.html"><button>Archive</button></a>
+            </div>
+    </div>
+
+            <!-- main content -->
+<div class="table-a">
+    <h4 class="table-title">Verified Student Accounts</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Full Name</th>
+                <th>Username</th>
+                <th>Gender</th>
+            </tr>
+        </thead>
+        <tbody id="usersBody">
+            <!-- rows go here -->
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const { createClient } = supabase;
+    const supabaseClient = createClient(
+        'https://xcuyfajikizhaxhvgwdp.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjdXlmYWppa2l6aGF4aHZnd2RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3MzU5NDMsImV4cCI6MjEwMzMxMTk0M30.TkbHcHlOfREeRWkedrcfiKznpd3t8urT05hU6tZ5Bm8'
+    );
+
+    async function loadUsers() {
+        const { data: users, error } = await supabaseClient
+            .from('profiles')
+            .select('fullname, username, gender')
+            .eq('role', 'student')
+            .order('fullname', { ascending: true });
+
+        if (error) {
+            console.error('Error loading users:', error);
+            return;
+        }
+
+        const tbody = document.getElementById('usersBody');
+        tbody.innerHTML = '';
+
+        if (users.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3">No verified students yet.</td></tr>';
+            return;
+        }
+
+        users.forEach(user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${user.fullname}</td>
+                <td>${user.username}</td>
+                <td>${user.gender}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    loadUsers();
+</script>
+
+</body>
+</html>

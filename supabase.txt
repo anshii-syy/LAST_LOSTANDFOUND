@@ -1,0 +1,14 @@
+*CREATING DATABASE IN SUPABASE*
+
+click table editor then click "+"
+click "create a table" and name the table (ex. item), click save.
+add new column and then add a name.
+After listing all data's click "add policy" then "create policy"
+*inside the policy*
+make ur policy name then in policy command click "all"
+for line 7 & 9 input "TRUE" then save policy
+
+**************************
+LOGIN.html - LOGINIF.css
+Signup.html - nasa loob nyan
+WEBSITE.html - css.css

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AICS Lost & Found Portal</title>
+    <link rel="stylesheet" href="css.css">
+</head>
+
+<body>
+
+    <div id="labyu">
+
+        <!-- header -->
+        <header class="header">
+            AICS LOST & FOUND PORTAL
+        </header>
+
+        <!-- main layout -->
+        <div id="grid">
+
+            <!-- left sidebar -->
+            <aside class="profile">
+                
+                <h2 class="box-title">STUDENT</h2>
+
+                <a href="notifications.html">
+                    <button type="button">Notification</button>
+                </a>
+
+                <a href="rnc.html">
+                    <button type="button"> Report Item</button>
+                </a>
+
+                <a href="claim.html">
+                    <button type="button">Claim item</button>
+                </a>
+
+                <a href="about.html">
+                    <button type="button"> How To Use?</button>
+
+                </a>
+
+                <a href="index.html">
+                    <button type="button">Logout</button>
+                </a>
+                
+            </aside>
+
+
+            <!-- main content -->
+<div class="table-a">
+    <h4 class="table-title">Displaying The Most Recent Lost Items</h4>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Date Found</th>
+                <th>Time Found</th>
+            </tr>
+        </thead>
+        <tbody id="recentItemsBody"></tbody>
+    </table>
+</div>
+
+
+<!-- DATABASE TO!!-->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const { createClient } = supabase;
+  const supabaseClient = createClient(
+    'https://xcuyfajikizhaxhvgwdp.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjdXlmYWppa2l6aGF4aHZnd2RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3MzU5NDMsImV4cCI6MjEwMzMxMTk0M30.TkbHcHlOfREeRWkedrcfiKznpd3t8urT05hU6tZ5Bm8'
+  );
+
+    async function loadRecentItems() {
+    const { data, error } = await supabaseClient
+      .from('FOUND ITEMS')
+      .select('*')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    const tbody = document.getElementById('recentItemsBody');
+    tbody.innerHTML = '';
+
+    if (data.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="3">No items reported yet.</td></tr>';
+      return;
+    }
+
+    data.forEach(item => {
+      const row = tbody.insertRow();
+      row.innerHTML = `
+        <td>${item.item_name}</td>
+        <td>${item.date}</td>
+        <td>${item.time}</td>
+      `;
+    });
+}
+
+loadRecentItems();
+
+
+</script>
+</body>
+</html>

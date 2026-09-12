@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AICS Lost & Found Portal</title>
+
+</head>
+<style>
+
+    body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f7fa;
+}
+
+.header {
+    height: 70px;
+    background-color: #1F3A5F;
+    color: white;
+    display: flex;
+    align-items: center; 
+    padding: 0 30px;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+/* para sa main layout nya */
+#labyu {
+    width: 100%;
+}
+
+
+#grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: calc(100vh - 70px);
+}
+
+/* sa left sidebar */
+.profile{
+    text-align: center;
+    background-color: #E8EEF5;
+    padding: 25px 20px;
+}
+
+/* "student" */
+.box-title {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #1F3A5F;
+}
+
+/* sidebar buttons */
+.profile a {
+    display: block;
+    margin-bottom: 12px;
+}
+
+.profile button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: white;
+    color: #1F3A5F;
+    font-size: 15px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.profile button:hover {
+    background-color: #D5E0EC;
+}
+
+.table-a {
+    padding: 20px;
+    background-color: #ffffff;
+    
+}
+
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.table th,
+.table td {
+  padding: 14px 16px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background: #002686; 
+  color: white;
+}
+
+.table td {
+  background: #fff;
+  text-align: left;
+}
+
+.table td.step-name {
+  text-align: center;
+  font-weight: bold;
+  color: #1F3A5F;
+  width: 220px;
+}
+
+</style>
+<body>
+
+    <div id="labyu">
+
+        <!-- header -->
+        <header class="header">
+            AICS LOST & FOUND PORTAL
+        </header>
+
+        <!-- main layout -->
+        <div id="grid">
+
+            <!-- left sidebar -->
+            <aside class="profile">
+                
+                <h2 class="box-title">STUDENT</h2>
+
+                <a href="Website.html">
+                    <button type="button">Home</button>
+                </a>   
+
+                <a href="notifications.html">
+                    <button type="button">Notification</button>
+                </a>
+
+                <a href="rnc.html">
+                    <button type="button"> Report Item</button>
+                </a>
+
+                <a href="claim.html">
+                    <button type="button">Claim item</button>
+                </a>
+
+                <a href="about.html">
+                    <button type="button"> How To Use?</button>
+
+                </a>
+
+                <a href="index.html">
+                    <button type="button">Logout</button>
+                </a>
+                
+            </aside>
+
+
+            <!-- main content -->
+<div class="table-a">
+    <table class="table">
+        <thead>
+            <tr>
+                <th colspan="2">📖 HOW TO USE THE AICS LOST & FOUND PORTAL</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="step-name">🏠 Home</td>
+                <td>
+                    1. Go to Home<br>
+                    2. View recently found items
+                </td>
+            </tr>
+            <tr>
+                <td class="step-name">📦 Report Item</td>
+                <td>
+                    1. Click Report Item<br>
+                    2. Fill out name, section, item, description, date & time<br>
+                    3. Click Submit
+                </td>
+            </tr>
+            <tr>
+                <td class="step-name">✅ Claim Item</td>
+                <td>
+                    1. Click Claim Item<br>
+                    2. Enter item and proof details<br>
+                    3. Submit and wait for admin approval
+                </td>
+            </tr>
+            <tr>
+                <td class="step-name">🔔 Notification</td>
+                <td>
+                    1. Click Notification<br>
+                    2. Check status of your reports/claims
+                </td>
+            </tr>
+            <tr>
+                <td class="step-name">🚪 Logout</td>
+                <td>
+                    1. Click Logout to exit your account
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</div>
+</div>
+
+</body>
+</html>

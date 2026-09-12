@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AICS Lost & Found Portal</title>
+
+</head>
+<style>
+
+    body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f7fa;
+}
+
+.header {
+    height: 70px;
+    background-color: #1F3A5F;
+    color: white;
+    display: flex;
+    align-items: center; 
+    padding: 0 30px;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+#labyu {
+    width: 100%;
+}
+
+#grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: calc(100vh - 70px);
+}
+
+.profile{
+    text-align: center;
+    background-color: #E8EEF5;
+    padding: 25px 20px;
+}
+
+.box-title {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #1F3A5F;
+}
+
+.profile a {
+    display: block;
+    margin-bottom: 12px;
+}
+
+.profile button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: white;
+    color: #1F3A5F;
+    font-size: 15px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.profile button:hover {
+    background-color: #D5E0EC;
+}
+
+.content-a {
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.content-a h2 {
+    color: #1F3A5F;
+    margin-top: 0;
+}
+
+.notif {
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    border-left: 5px solid #ccc;
+    background-color: #f5f7fa;
+}
+
+.notif.pending {
+    border-left-color: #e6a817;
+    background-color: #fff8e6;
+}
+
+.notif.approved {
+    border-left-color: #2e7d32;
+    background-color: #eaf7ea;
+}
+
+.notif.rejected {
+    border-left-color: #c62828;
+    background-color: #fdeaea;
+}
+
+.notif .item {
+    font-weight: bold;
+    color: #1F3A5F;
+}
+
+.empty {
+    color: #888;
+    font-size: 14px;
+}
+
+</style>
+<body>
+
+    <div id="labyu">
+
+        <header class="header">
+            AICS LOST & FOUND PORTAL
+        </header>
+
+        <div id="grid">
+
+            <aside class="profile">
+                
+                <h2 class="box-title">STUDENT</h2>
+
+                <a href="Website.html">
+                    <button type="button">Home</button>
+                </a>   
+
+                <a href="notifications.html">
+                    <button type="button">Notification</button>
+                </a>
+
+                <a href="rnc.html">
+                    <button type="button"> Report Item</button>
+                </a>
+
+                <a href="claim.html">
+                    <button type="button">Claim item</button>
+                </a>
+
+                <a href="about.html">
+                    <button type="button"> How To Use?</button>
+                </a>
+
+                <a href="index.html">
+                    <button type="button">Logout</button>
+                </a>
+                
+            </aside>
+
+            <div class="content-a">
+                <h2>🔔 Notifications</h2>
+                <div id="notifList">
+                    <p class="empty">Loading...</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const { createClient } = supabase;
+    const supabaseClient = createClient(
+        'https://xcuyfajikizhaxhvgwdp.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjdXlmYWppa2l6aGF4aHZnd2RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3MzU5NDMsImV4cCI6MjEwMzMxMTk0M30.TkbHcHlOfREeRWkedrcfiKznpd3t8urT05hU6tZ5Bm8'
+    );
+
+    async function loadNotifications() {
+        const listEl = document.getElementById('notifList');
+
+        const { data: userData, error: userError } = await supabaseClient.auth.getUser();
+        if (userError || !userData.user) {
+            listEl.innerHTML = '<p class="empty">Please log in to see your notifications.</p>';
+            return;
+        }
+        const userId = userData.user.id;
+
+        const notifications = [];
+
+// reports the student submitted
+const { data: reports, error: reportsError } = await supabaseClient
+    .from('FOUND ITEMS')
+    .select('item_name, status, created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
+
+if (!reportsError && reports) {
+    reports.forEach(r => {
+        if (r.status === 'done') {
+            notifications.push({
+                type: 'approved',
+                time: r.created_at,
+                html: `<span class="item">${r.item_name}</span> — Your reported item has been marked as found/resolved!`
+            });
+        } else {
+            notifications.push({
+                type: 'pending',
+                time: r.created_at,
+                html: `<span class="item">${r.item_name}</span> — Thanks for submitting your report! It's currently pending review.`
+            });
+        }
+    });
+}
+
+       // claims still pending
+const { data: pendingClaims, error: pendingError } = await supabaseClient
+    .from('CLAIM')
+    .select('item_name, date, time')
+    .eq('user_id', userId)
+    .order('date', { ascending: false });
+
+if (!pendingError && pendingClaims) {
+    pendingClaims.forEach(c => {
+        notifications.push({
+            type: 'pending',
+            time: `${c.date} ${c.time}`,
+            html: `<span class="item">${c.item_name}</span> — Your claim is still pending review.`
+        });
+    });
+}
+
+        // resolved claims (approved / rejected)
+        const { data: archivedClaims, error: archiveError } = await supabaseClient
+            .from('CLAIM_ARCHIVE')
+            .select('item_name, result, archived_at')
+            .eq('user_id', userId)
+            .order('archived_at', { ascending: false });
+
+        if (!archiveError && archivedClaims) {
+            archivedClaims.forEach(c => {
+                if (c.result === 'approved') {
+                    notifications.push({
+                        type: 'approved',
+                        time: c.archived_at,
+                        html: `<span class="item">${c.item_name}</span> — Your claim form has been approved. You may now get it at the school's faculty office.`
+                    });
+                } else {
+                    notifications.push({
+                        type: 'rejected',
+                        time: c.archived_at,
+                        html: `<span class="item">${c.item_name}</span> — Your claim form has been rejected due to insufficient proof of ownership.`
+                    });
+                }
+            });
+        }
+
+        if (notifications.length === 0) {
+            listEl.innerHTML = '<p class="empty">No notifications yet.</p>';
+            return;
+        }
+
+        notifications.sort((a, b) => new Date(b.time) - new Date(a.time));
+
+        listEl.innerHTML = '';
+        notifications.forEach(n => {
+            const div = document.createElement('div');
+            div.className = `notif ${n.type}`;
+            div.innerHTML = n.html;
+            listEl.appendChild(div);
+        });
+    }
+
+    loadNotifications();
+</script>
+
+</body>
+</html>

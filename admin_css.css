@@ -1,0 +1,175 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f7fa;
+}
+
+#grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 100vh;
+}
+
+/* sidebar */
+.profile {
+    background-color: #1F3A5F;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.profile h2 {
+    padding: 20px;
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #16293f; /* slightly darker header strip */
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.nav a {
+    color: #cfd9e6;
+    text-decoration: none;
+}
+
+.nav button {
+    width: 100%;
+    text-align: left;
+    padding: 14px 20px;
+    border: none;
+    background: transparent;
+    color: #cfd9e6;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.nav button:hover {
+    background-color: #2a4a75;
+    color: white;
+}
+
+.nav button.active {
+    background-color: #ffffff;
+    color: #1F3A5F;
+    font-weight: bold;
+}
+
+.logout-wrap {
+    margin-top: auto;
+}
+
+.logout-wrap button {
+    width: 100%;
+    text-align: left;
+    padding: 14px 20px;
+    border: none;
+    background: transparent;
+    color: #f5b5b5;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.logout-wrap button:hover {
+    background-color: #2a4a75;
+}
+
+/* main content */
+.content {
+    padding: 30px;
+}
+
+.content h1 {
+    margin-top: 0;
+    color: #1F3A5F;
+}
+
+.box {
+    display: flex;
+    gap: 20px;
+    margin: 25px 0;
+}
+
+.box-a {
+    flex: 1;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* distinct colors per stat, like the reference */
+.box-a.found {
+    background-color: #e3f1e3;
+}
+.box-a.claimed {
+    background-color: #fdf3d8;
+}
+.box-a.pending {
+    background-color: #e1ecf7;
+}
+
+.box-title {
+    font-size: 14px;
+    color: #4a5b70;
+    margin-top: 6px;
+}
+
+.number {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1F3A5F;
+}
+
+.box-icon {
+    font-size: 24px;
+}
+
+/* table card */
+.table-a {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    margin-bottom: 20px;
+}
+
+.table-title {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #2b7a9e;
+    font-weight: bold;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.table th,
+.table td {
+    padding: 14px 16px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.table th {
+    background: #1F3A5F;
+    color: white;
+}
+
+.table td {
+    background: #fff;
+}
+
+.table tr:nth-child(even) td {
+    background: #f9fafc;
+}

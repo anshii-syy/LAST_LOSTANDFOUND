@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Account Creation</title>
+<style>
+
+body {
+min-height: 100vh;
+margin: 0;
+display: flex;
+justify-content: center;
+align-items: center;
+background: linear-gradient(-45deg, #000000, #001233, #03045E, #023E8A);
+background-size: 400% 400%;
+animation: abyssalFlow 12s ease infinite;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+padding: 20px;
+box-sizing: border-box;
+}        
+        
+/* basta sa background na gumagalaw */
+@keyframes abyssalFlow {
+0% { background-position: 0% 50%; }
+50% { background-position: 100% 50%; }
+100% { background-position: 0% 50%; }
+}
+
+/* centers the form */
+form {
+width: 100%;
+display: flex;
+justify-content: center;
+}
+
+/* form Designs */
+.box {
+width: 100%;
+max-width: 550px;
+background-color: #ffffff;
+border-radius: 20px;
+padding: 40px 35px;
+flex-direction: column;
+box-sizing: border-box;
+box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.box h2 {
+font-size: 28px;
+color: #1a233a;
+margin: 0 0 20px 0;
+font-weight: 700;
+text-align: center;
+}
+
+.form-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 15px 20px;
+}
+
+/* mga forms padin bawhha */
+.input-group {
+display: flex;
+flex-direction: column;
+}
+
+.input-group label {
+font-size: 11px;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+color: #555;
+margin-bottom: 8px;
+        }
+
+.input-group input,
+.input-group select {
+width: 100%;
+padding: 10px 14px;
+border: 1px solid #e0e0e0;                        
+font-size: 13px;            
+outline: none;            
+color: #333;            
+background-color: #f9f9f9;         
+box-sizing: border-box;
+transition: all 0.2s ease;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+border-color: #03045E;
+background-color: #fff;
+box-shadow: 0 0 5px rgba(3, 4, 94, 0.2);
+        }
+
+/* SUBMIT BUTTON */
+.submit {
+margin-top: 25px;
+width: 100%;
+padding: 12px;
+background: linear-gradient(135deg, #03045E 0%, #023E8A 100%);
+color: #ffffff;
+border: none;
+border-radius: 25px;
+font-size: 14px;
+font-weight: 700;
+letter-spacing: 1px;
+cursor: pointer;
+}
+
+.submit:hover {
+transform: translateY(-2px);
+box-shadow: 0 5px 15px rgba(3, 4, 94, 0.3);
+}
+
+/* Basta sa "Already have an account?" yan */
+.sign {
+color: rgb(0, 0, 0);
+text-align: center;
+margin-top: 20px;
+margin-bottom: 0;
+font-size: 16px;
+}
+
+.sign a {
+color: rgb(0, 0, 0);
+font-weight: bold;
+text-decoration: none;
+font-size: 16px;
+text-decoration: underline;
+}
+
+</style>
+</head>
+
+<body>
+
+    <form onsubmit="event.preventDefault(); handleSignUp();">
+        
+        <div class="box">
+
+            <h2>Create your Account</h2>
+
+            <div class="form-grid">
+                <div class="input-group">
+                    <label for="signupFullname">Enter your Name</label>
+                    <input type="text" id="signupFullname" placeholder="Fullname" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="signupUsername">Preferred Username</label>
+                    <input type="text" id="signupUsername" placeholder="Username" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="signupPassword">Enter your Password</label>
+                    <input type="password" id="signupPassword" placeholder="Password" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="signupBirthdate">Birthdate</label>
+                    <input type="date" id="signupBirthdate" placeholder="MM/DD/YYYY" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="signupGender">Gender</label>
+                    <select id="signupGender" required>
+                        <option value="">Select...</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="signupRole">Account Type</label>
+                    <select id="signupRole" required>
+                        <option value="">Select...</option>
+                        <option value="student">Student</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+            </div>
+
+            <p class="sign">
+                    Already have an account?
+                    <a href="index.html">Sign In</a>
+                    </p>
+
+            <button type="submit" class="submit">DONE</button>
+
+        </div>
+    </form>
+
+<!-- DATABASE TO NHAK'ED -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+    const SUPABASE_URL = 'https://xcuyfajikizhaxhvgwdp.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjdXlmYWppa2l6aGF4aHZnd2RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3MzU5NDMsImV4cCI6MjEwMzMxMTk0M30.TkbHcHlOfREeRWkedrcfiKznpd3t8urT05hU6tZ5Bm8';
+    
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function handleSignUp() {
+        const fullname = document.getElementById('signupFullname').value.trim();
+        const username = document.getElementById('signupUsername').value.trim();
+        const password = document.getElementById('signupPassword').value.trim();
+        const birthdate = document.getElementById('signupBirthdate').value.trim();
+        const gender = document.getElementById('signupGender').value.trim();
+        const role = document.getElementById('signupRole').value.trim();
+
+        if (!fullname || !username || !password || !birthdate || !gender || !role) {
+            alert("Please fill out all fields!");
+            return;
+        }
+
+        const Email = username.toLowerCase().replace(/[^a-z0-9]/g, '') + "@aicslocal.com";
+
+        try {
+            const { data, error } = await supabaseClient.auth.signUp({
+                email: Email,
+                password: password,
+                options: {
+                    data: {
+                        fullname: fullname,
+                        username: username,
+                        birthdate: birthdate,
+                        gender: gender,
+                        role: role
+                    }
+                }
+            });
+
+            if (error) {
+                console.error("Supabase Error:", error);
+                if (error.message.includes("already registered")) {
+                    alert("This username is already taken!");
+                } else {
+                    alert("Error: " + error.message);
+                }
+                return;
+            }
+
+            alert("REGISTRATION COMPLETE!");
+            window.location.href = "index.html";
+
+        } catch (err) {
+            console.error("Unexpected Error:", err);
+            alert("An unexpected error occurred.");
+        }
+    }
+
+</script>
+</body>
+</html>
