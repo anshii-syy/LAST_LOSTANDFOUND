@@ -232,48 +232,53 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const { createClient } = supabase;
-        const supabaseClient = createClient(
-            'https://xcuyfajikizhaxhvgwdp.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjdXlmYWppa2l6aGF4aHZnd2RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3MzU5NDMsImV4cCI6MjEwMzMxMTk0M30.TkbHcHlOfREeRWkedrcfiKznpd3t8urT05hU6tZ5Bm8'
-        );
+const { createClient } = supabase;
+const supabaseClient = createClient(
+    'https://xcuyfajikizhaxhvgwdp.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhjdXlmYWppa2l6aGF4aHZnd2RwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc3MzU5NDMsImV4cCI6MjEwMzMxMTk0M30.TkbHcHlOfREeRWkedrcfiKznpd3t8urT05hU6tZ5Bm8'
+);
 
-        let currentClaim = null; 
+let currentClaim = null;
+let claimsData = [];   // NEW: store all claims here
 
-        async function loadClaims() {
-            const { data: claims, error } = await supabaseClient
-                .from('CLAIM')
-                .select('id, student_name, student_section, item_name, proof_description, date, time, user_id');
+async function loadClaims() {
+    const { data: claims, error } = await supabaseClient
+        .from('CLAIM')
+        .select('id, student_name, student_section, item_name, proof_description, date, time, user_id');
 
-            if (error) {
-                console.error('Error loading claims:', error);
-                return;
-            }
+    if (error) {
+        console.error('Error loading claims:', error);
+        return;
+    }
 
-            const tbody = document.querySelector('.table tbody');
-            tbody.innerHTML = '';
+    claimsData = claims; // NEW: save for lookup later
 
-            claims.forEach(claim => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${claim.student_name}</td>
-                    <td>${claim.student_section}</td>
-                    <td>${claim.item_name}</td>
-                    <td><button class="view" onclick='showClaimDetails(${JSON.stringify(claim)})'>View</button></td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
+    const tbody = document.querySelector('.table tbody');
+    tbody.innerHTML = '';
 
-        function showClaimDetails(claim) {
-            currentClaim = claim; 
-            document.getElementById('ItemName').textContent = claim.item_name;
-            document.getElementById('Name').textContent = claim.student_name;
-            document.getElementById('Section').textContent = claim.student_section;
-            document.getElementById('Description').textContent = claim.proof_description;
-            document.getElementById('claim').style.display = 'flex';
-        }
+    claims.forEach(claim => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${claim.student_name}</td>
+            <td>${claim.student_section}</td>
+            <td>${claim.item_name}</td>
+            <td><button class="view" onclick="showClaimDetails(${claim.id})">View</button></td>
+        `;
+        tbody.appendChild(row);
+    });
+}
 
+function showClaimDetails(id) {
+    const claim = claimsData.find(c => c.id === id);  // NEW: lookup instead of inline JSON
+    if (!claim) return;
+
+    currentClaim = claim;
+    document.getElementById('ItemName').textContent = claim.item_name;
+    document.getElementById('Name').textContent = claim.student_name;
+    document.getElementById('Section').textContent = claim.student_section;
+    document.getElementById('Description').textContent = claim.proof_description;
+    document.getElementById('claim').style.display = 'flex';
+}
         function closebutton() {
             document.getElementById('claim').style.display = 'none';
             currentClaim = null;
